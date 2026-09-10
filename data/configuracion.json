@@ -1,0 +1,25 @@
+{
+  "_nota": "Este archivo es de referencia/documentación. Los valores realmente usados por la app están en src/utils/constantes.py",
+  "denominaciones": [100000, 50000, 20000, 10000],
+  "tope_ciclo_acarreo": 600000,
+  "longitud_vector_interno": 16,
+  "longitud_celular": 10,
+  "longitud_reporte_nequi": 11,
+  "longitud_ahorro_mano": 11,
+  "longitud_cuenta_ahorros": 11,
+  "longitud_pin": 4,
+  "longitud_clave_temporal": 6,
+  "segundos_vigencia_clave": 60,
+  "montos_fijos": {
+    "nequi": [20000, 50000, 100000, 200000],
+    "ahorro_mano": [30000, 100000, 150000, 300000],
+    "cuenta_ahorros": [50000, 200000, 400000, 600000]
+  },
+  "inventario_inicial": {
+    "100000": 40,
+    "50000": 40,
+    "20000": 40,
+    "10000": 40
+  },
+  "recarga_inventario": "solo al agotarse (no por umbral preventivo)"
+}
