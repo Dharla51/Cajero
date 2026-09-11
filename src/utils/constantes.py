@@ -4,8 +4,11 @@ Aquí se centraliza todo lo "configurable" para que el resto del código
 no tenga números mágicos regados por todas partes.
 """
 
-DENOMINACIONES = [100000, 50000, 20000, 10000]
-DENOMINACIONES_ASC = [10000, 20000, 50000, 100000]
+# Orden de recorrido del cajero, igual a la lógica de referencia:
+# 10.000 -> 20.000 -> 50.000 -> 100.000
+DENOMINACIONES = [10000, 20000, 50000, 100000]
+DENOMINACIONES_ASC = DENOMINACIONES
+DENOMINACIONES_DESC = [100000, 50000, 20000, 10000]
 
 
 LONGITUD_VECTOR_INTERNO = 16

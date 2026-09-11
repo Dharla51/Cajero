@@ -3,7 +3,7 @@ servicio de retiro: valida los datos de la solicitud, ejecuta el algoritmo de ac
 descuenta los billetes del inventario. Si no hay suficientes billetes, recarga el cajero y vuelve a intentar.
 """
 
-from src.algorithms.acarreo import ejecutar_acarreo
+from src.Logic.acarreo import ejecutar_acarreo
 from src.repositories.cuenta_repository import Cuenta_no_existente
 from src.services import caja_service
 from src.validators.validadores import (

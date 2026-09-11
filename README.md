@@ -1,83 +1,106 @@
 # 🏧 Cajero Automático
 
-Proyecto de escritorio en Python con interfaz gráfica en Tkinter para simular un cajero automático con validaciones, algoritmo de acarreo y cálculo de inventario real.
+Aplicación desktop desarrollada en Python con Tkinter para simular un cajero con validación de cuentas, cálculo de retiros, recorrido del algoritmo de acarreo y control del inventario real del cajero.
 
-## ✨ Descripción
+## 📌 ¿Qué hace el proyecto?
 
-Este sistema permite:
+La aplicación permite:
 
 - realizar retiros por NEQUI, ahorro a la mano y cuenta de ahorros
-- validar datos del usuario con reglas específicas
-- calcular la entrega exacta de billetes por denominación
-- mostrar la matriz de intentos del algoritmo de acarreo
-- proyectar cuántos retiros adicionales podría soportar el cajero
-- consultar el inventario actual de billetes y su recarga automática
+- validar los datos del usuario según reglas específicas
+- calcular la entrega de billetes por denominación
+- mostrar la matriz de intentos del acarreo
+- proyectar cuántos retiros adicionales puede soportar la caja
+- descontar y recargar el inventario real del cajero según el retiro realizado
 
-## 🧩 Tipos de retiro
+## 🧩 Reglas de validación del usuario
 
-| Tipo | Identificación | Clave |
-|---|---|---|
-| NEQUI | Celular de 10 dígitos y debe iniciar en `3` | Clave temporal de 6 dígitos |
-| Ahorro a la mano | Vector de 11 dígitos, con primer dígito `0` o `1` y segundo `3` | PIN de 4 dígitos |
-| Cuenta de ahorros | Vector de 11 dígitos | PIN de 4 dígitos |
+### 1) NEQUI
+- longitud: 10 dígitos
+- primer dígito obligatorio: `3`
+- ejemplo válido: `3001234567`
 
-> El dinero no pertenece a la cuenta, sino al cajero. El saldo real del sistema corresponde al efectivo físico disponible en la caja.
+### 2) Ahorro a la mano
+- longitud: 11 dígitos
+- primer dígito: `0` o `1`
+- segundo dígito obligatorio: `3`
+- ejemplo válido: `03345678901`
 
-## 🏷️ Denominaciones soportadas
+### 3) Cuenta de ahorros
+- longitud: 11 dígitos
+- solo admite números
+- ejemplo válido: `50123456789`
 
-Solo se usan billetes de:
+### 4) PIN / clave
+- 4 dígitos exactos
+- no se muestran en pantalla al escribir
+
+> El dinero no está asociado a la cuenta del usuario; la cuenta solo valida la identidad y la clave. El saldo real del sistema corresponde al efectivo físico que hay en la caja del cajero.
+
+## 💵 Denominaciones del cajero
+
+El sistema trabaja con estas denominaciones:
 
 - $10.000
 - $20.000
 - $50.000
 - $100.000
 
-## ▶️ Cómo ejecutar
+El orden del recorrido del cajero queda definido como:
 
-Requiere Python 3.10+
+```text
+10.000 -> 20.000 -> 50.000 -> 100.000
+```
+
+## 🔄 Lógica del acarreo
+
+El algoritmo no depende de una matriz rígida de valores fija en todo el código, sino del recorrido del monto con la secuencia de denominaciones. La app genera la secuencia de intentos y contabiliza cómo se va cubriendo el valor solicitado.
+
+La salida final devuelve:
+
+- la cantidad exacta de billetes por denominación
+- el total de billetes entregados
+- la matriz de intentos del acarreo
+- el valor verificado del retiro
+- la cantidad de combinaciones posibles para ese monto
+
+### Ejemplo de recorrido
+
+Para un monto de 300.000, la matriz generada por la lógica del proyecto queda así:
+
+```text
+Intento 1: {10000:1, 20000:1, 50000:1, 100000:1}
+Intento 2: {10000:0, 20000:1, 50000:1, 100000:0}
+Intento 3: {10000:0, 20000:0, 50000:1, 100000:0}
+```
+
+Esto es lo que la interfaz muestra como la matriz de intentos del acarreo.
+
+## 🧮 Predicción y caja
+
+La aplicación adicionalmente muestra:
+
+- cuántos retiros podrían realizarse con el efectivo restante
+- la cantidad disponible del cajero por denominación
+- el inventario real de billetes en la caja
+- la recarga automática cuando el inventario queda muy bajo
+
+La lógica del inventario realiza una resta real de billetes por cada retiro ejecutado y persiste los cambios en archivo JSON.
+
+## ▶️ Cómo ejecutar el proyecto
+
+Requisitos:
+
+- Python 3.10+
+- Tkinter
 
 ```bash
 cd cajero_automatico
 python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
+source .venv/bin/activate    # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 python main.py
 ```
-
-> En Windows, `tkinter` suele venir integrado con Python. En Linux puede requerirse instalar `python3-tk`.
-
-## 🧪 Cómo probarlo
-
-- NEQUI: usa un celular válido que empiece en `3`.
-- Ahorro a la mano: usa un vector de 11 dígitos con primer dígito `0` o `1` y segundo `3`.
-- Cuenta de ahorros: usa un vector válido y un PIN de 4 dígitos.
-
-La primera vez que se usa un vector válido, el sistema lo crea automáticamente como cuenta demo.
-
-## 🔄 Lógica de acarreo
-
-El algoritmo trabaja por niveles de denominaciones y genera una matriz de intentos con reinicios cuando el ciclo completa una secuencia y vuelve a comenzar.
-
-### Orden de niveles
-
-```text
-Nivel 1: 100k, 50k, 20k, 10k
-Nivel 2: 100k, 50k, 20k
-Nivel 3: 100k, 50k
-Nivel 4: 100k
-```
-
-Esto permite evaluar qué combinación de billetes puede cubrir un monto y detectar reinicios cuando la secuencia llega a su límite.
-
-## 📊 Predicción y disponibilidad
-
-La aplicación muestra:
-
-- la cantidad exacta de billetes entregados
-- la matriz de intentos del acarreo
-- combinaciones posibles para el monto solicitado
-- el efectivo restante del cajero
-- la cantidad de retiros adicionales que podría continuar entregando
 
 ## 🗂️ Estructura del proyecto
 
@@ -103,6 +126,7 @@ cajero_automatico/
 │   │   └── retiro_service.py
 │   ├── ui/
 │   │   ├── home_view.py
+│   │   ├── inventario_view.py
 │   │   ├── main_window.py
 │   │   ├── retiro_view.py
 │   │   └── result_view.py
@@ -111,21 +135,39 @@ cajero_automatico/
 │   │   └── helpers.py
 │   └── validators/
 │       └── validadores.py
-└── tests/
+├── tests/
+│   └── test_validadores.py
+└── .gitignore
 ```
 
-## ✅ Estado del proyecto
+## ✅ Estado actual
 
-La aplicación ya permite:
+El proyecto ya está funcionando con:
 
-- realizar retiros válidos
-- validar entradas con reglas específicas
-- procesar el algoritmo de acarreo
-- calcular la predicción de disponibilidad del cajero
-- descontar y reabastecer el inventario según el movimiento real del cajero
+- validación correcta de NEQUI, ahorro a la mano y cuenta de ahorros
+- denominaciones 10k, 20k, 50k y 100k
+- cálculo del acarreo con recorrido de matriz de intentos
+- inventario real de la caja con decremento por retiro
+- recarga automática del cajero cuando hace falta efectivo
+- pantalla final con resultado, predicción y control visual del inventario
 
-## 🚀 Mejoras futuras
+## 🧪 Verificación
 
-- persistir historial de transacciones en archivo externo
-- agregar pruebas automáticas más extensas
-- empaquetar la app como ejecutable para distribución
+Se validó con:
+
+```bash
+python -m pytest -q
+```
+
+Resultado esperado:
+
+```text
+3 passed
+```
+
+## 🚀 Futuras mejoras
+
+- historial de retiros en archivo externo
+- exportación de reportes
+- interfaz más avanzada para gestión del inventario
+- empaquetado ejecutable para distribución
