@@ -17,11 +17,7 @@ from src.utils.constantes import (
 # --- Normalización de vectores y moneda ---------------------------------
 
 def normalizar_interno(numero: str, longitud: int = LONGITUD_VECTOR_INTERNO) -> str:
-    """
-    Rellena `numero` con ceros a la izquierda hasta `longitud` dígitos.
-    Uso EXCLUSIVAMENTE interno (llaves de almacenamiento/cuentas).
-    El usuario jamás debe ver este valor.
-    """
+    
     numero = str(numero).strip()
     if len(numero) > longitud:
         raise ValueError(f"El número '{numero}' excede la longitud interna de {longitud} dígitos.")

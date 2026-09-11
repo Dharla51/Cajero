@@ -4,22 +4,10 @@ Aquí se centraliza todo lo "configurable" para que el resto del código
 no tenga números mágicos regados por todas partes.
 """
 
-# Denominaciones de billetes que maneja el cajero (NO incluye 5.000, por requerimiento)
 DENOMINACIONES = [100000, 50000, 20000, 10000]
-# Mismas denominaciones pero en orden ASCENDENTE: el acarreo y su matriz
-# de intentos SIEMPRE se leen/presentan empezando por el billete de 10.000.
 DENOMINACIONES_ASC = [10000, 20000, 50000, 100000]
 
-# --- Metodología del acarreo ---
-# El acarreo se calcula por NIVELES (ver src/algorithms/acarreo.py):
-# nivel 1 usa las 4 denominaciones, nivel 2 sin el billete de 10.000,
-# nivel 3 solo 100k/50k, nivel 4 solo 100k. Siempre se evalúa en orden
-# ascendente (10.000 primero). Cuando un nivel ya no cabe en el
-# restante, se marca un reinicio (fila de ceros) y se vuelve a intentar
-# con las 4 denominaciones, continuando luego desde el nivel 2.
 
-# Longitud estándar interna para cualquier número de cuenta (se rellena con
-# ceros a la izquierda). El usuario NUNCA ve este relleno.
 LONGITUD_VECTOR_INTERNO = 16
 
 # Longitudes de vectores "públicos" (los que digita/ve el usuario)

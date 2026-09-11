@@ -13,11 +13,11 @@ from src.utils.constantes import MONTOS_FIJOS, LONGITUD_PIN
 from src.utils.helpers import formatear_moneda
 from src.services.retiro_service import RetiroError
 
-COLOR_FONDO = "#0b1f3a"
-COLOR_ACENTO = "#f2b705"
-COLOR_TEXTO = "#ffffff"
-COLOR_BOTON = "#13345c"
-COLOR_ERROR = "#ff6b6b"
+COLOR_FONDO = "#6D9B61"
+COLOR_ACENTO = "#76C457"
+COLOR_TEXTO = "#080808"
+COLOR_BOTON = "#FBE6C2"
+COLOR_ERROR = "#060606"
 
 
 class RetiroView(tk.Frame):
@@ -31,55 +31,83 @@ class RetiroView(tk.Frame):
         self.monto_seleccionado = tk.IntVar(value=0)
         self._id_reloj = None
 
-        tk.Label(self, text=config["titulo"], font=("Segoe UI", 20, "bold"),
-                 bg=COLOR_FONDO, fg=COLOR_ACENTO).pack(pady=(28, 5))
-        tk.Label(self, text=config["instruccion_vector"], font=("Segoe UI", 11),
-                 bg=COLOR_FONDO, fg=COLOR_TEXTO, justify="center").pack(pady=(0, 6))
+        tk.Label(self, text=config["titulo"], font=("New times roman", 22, "bold"),
+                 bg=COLOR_FONDO, fg="#050505").pack(pady=(28, 5))
+        tk.Label(self, text=config["instruccion_vector"], font=("New times roman", 11),
+                 bg=COLOR_FONDO, fg="#050505", justify="center").pack(pady=(0, 6))
 
-        self.entry_vector = tk.Entry(self, font=("Segoe UI", 16), justify="center", width=20)
+        self.entry_vector = tk.Entry(
+            self, font=("New times roman", 16), justify="center", width=20,
+            bg="#FFF8CF", fg="#050505", insertbackground="#050505",
+            highlightthickness=1, highlightbackground="#76C457", highlightcolor="#76C457"
+        )
         self.entry_vector.pack(pady=4)
-        self._solo_digitos(self.entry_vector, config["longitud_vector"])
+        if config["tipo"] == "nequi":
+            self._solo_digitos(self.entry_vector, config["longitud_vector"], primer_digito="3")
+        elif config["tipo"] == "ahorro_mano":
+            self._solo_digitos(self.entry_vector, config["longitud_vector"], primer_digito=("0", "1"), segundo_digito="3")
+        else:
+            self._solo_digitos(self.entry_vector, config["longitud_vector"])
 
         # Clave temporal (solo NEQUI) o PIN a digitar (ahorro a la mano / cuenta ahorros)
         self.entry_pin = None
         self.lbl_clave = None
         self.lbl_temporizador = None
         if config["requiere_pin"]:
-            tk.Label(self, text="Clave (4 dígitos)", font=("Segoe UI", 11),
-                      bg=COLOR_FONDO, fg=COLOR_TEXTO).pack(pady=(14, 2))
-            self.entry_pin = tk.Entry(self, font=("Segoe UI", 16), justify="center", width=10, show="●")
+            tk.Label(self, text="Clave (4 dígitos)", font=("New times roman", 11),
+                      bg=COLOR_FONDO, fg="#050505").pack(pady=(14, 2))
+            self.entry_pin = tk.Entry(
+                self, font=("New times roman", 16), justify="center", width=10, show="●",
+                bg="#FFF8CF", fg="#050505", insertbackground="#050505",
+                highlightthickness=1, highlightbackground="#76C457", highlightcolor="#76C457"
+            )
             self.entry_pin.pack(pady=2)
             self._solo_digitos(self.entry_pin, LONGITUD_PIN)
         elif config["tiene_clave_temporal"]:
-            self.lbl_clave = tk.Label(self, font=("Segoe UI", 13, "bold"), bg=COLOR_FONDO, fg=COLOR_ACENTO)
+            self.lbl_clave = tk.Label(self, font=("New times roman", 13, "bold"), bg=COLOR_FONDO, fg="#050505")
             self.lbl_clave.pack(pady=(14, 0))
-            self.lbl_temporizador = tk.Label(self, font=("Segoe UI", 10), bg=COLOR_FONDO, fg="#9db4d1")
+            self.lbl_temporizador = tk.Label(self, font=("New times roman", 10), bg=COLOR_FONDO, fg="#050505")
             self.lbl_temporizador.pack()
 
-        tk.Label(self, text="Seleccione el monto a retirar", font=("Segoe UI", 12),
-                 bg=COLOR_FONDO, fg=COLOR_TEXTO).pack(pady=(20, 6))
+        tk.Label(self, text="Seleccione el monto a retirar", font=("New times roman", 12),
+                 bg=COLOR_FONDO, fg="#050505").pack(pady=(20, 6))
         self._construir_selector_montos(config["tipo"])
 
-        self.lbl_error = tk.Label(self, font=("Segoe UI", 11), bg=COLOR_FONDO, fg=COLOR_ERROR,
+        self.lbl_error = tk.Label(self, font=("New times roman", 11), bg=COLOR_FONDO, fg="#050505",
                                    wraplength=600, justify="center")
         self.lbl_error.pack(pady=(16, 6))
 
         frame_botones = tk.Frame(self, bg=COLOR_FONDO)
         frame_botones.pack(pady=10)
-        tk.Button(frame_botones, text="Confirmar retiro", font=("Segoe UI", 12, "bold"),
-                  bg=COLOR_ACENTO, fg="#0b1f3a", width=18, relief="flat", cursor="hand2",
+        tk.Button(frame_botones, text="Confirmar retiro", font=("New times roman", 12, "bold"),
+                  bg=COLOR_ACENTO, fg="#050505", width=18, relief="flat", bd=0, cursor="hand2",
+                  activebackground="#FBE6C2", activeforeground="#050505",
                   command=self._confirmar).pack(side="left", padx=6)
-        tk.Button(frame_botones, text="Volver", font=("Segoe UI", 12),
-                  bg=COLOR_BOTON, fg=COLOR_TEXTO, width=12, relief="flat", cursor="hand2",
-                  command=lambda: self.app.mostrar("home")).pack(side="left", padx=6)
+        tk.Button(frame_botones, text="Volver", font=("New times roman", 12),
+                  bg=COLOR_BOTON, fg="#050505", width=12, relief="flat", bd=0,
+                  activebackground="#76C457", activeforeground="#050505",
+                  cursor="hand2", command=lambda: self.app.mostrar("home")).pack(side="left", padx=6)
 
     # --- helpers de construcción ------------------------------------------
 
-    def _solo_digitos(self, entry: tk.Entry, longitud_maxima: int):
-        def validar(valor_propuesto, maximo=longitud_maxima):
+    def _solo_digitos(self, entry: tk.Entry, longitud_maxima: int, primer_digito: str | tuple[str, ...] | None = None, segundo_digito: str | None = None):
+        def validar(valor_propuesto, maximo=longitud_maxima, primer=primer_digito, segundo=segundo_digito):
             if valor_propuesto == "":
                 return True
-            return valor_propuesto.isdigit() and len(valor_propuesto) <= int(maximo)
+            if not valor_propuesto.isdigit():
+                return False
+            if len(valor_propuesto) > int(maximo):
+                return False
+            if primer is not None and valor_propuesto:
+                if isinstance(primer, tuple):
+                    if valor_propuesto[0] not in primer:
+                        return False
+                elif valor_propuesto[0] != primer:
+                    return False
+            if segundo is not None and len(valor_propuesto) >= 2:
+                if valor_propuesto[1] != segundo:
+                    return False
+            return True
 
         entry.configure(validate="key", validatecommand=(self.register(validar), "%P"))
 

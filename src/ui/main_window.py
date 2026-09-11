@@ -8,20 +8,23 @@ import tkinter as tk
 
 from src.controller.cajero import Cajero
 
-COLOR_FONDO = "#000000"
-COLOR_ACENTO = "#eae8e4"
-COLOR_TEXTO = "#ffffff"
-FUENTE_TITULO = ("New Times Roman", 20, "bold")
-FUENTE_NORMAL = ("New Times Roman", 12)
+COLOR_FONDO = "#6D9B61"
+COLOR_ACENTO = "#76C457"
+COLOR_TEXTO = "#090909"
+COLOR_PANEL = "#FBE6C2"
+COLOR_BOTON = "#76C457"
+FUENTE_TITULO = ("New times roman", 20, "bold")
+FUENTE_NORMAL = ("New times roman", 12)
 
 
 class MainWindow(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Cajero Automático")
-        self.geometry("760x640")
+        self.geometry("980x760")
+        self.minsize(900, 680)
         self.configure(bg=COLOR_FONDO)
-        self.resizable(False, False)
+        self.resizable(True, True)
 
         self.cajero = Cajero()
 

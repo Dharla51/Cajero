@@ -1,10 +1,3 @@
-"""
-Todas las validaciones de entrada del cajero, en un solo lugar:
-formato de vectores (celular, ahorro a la mano, cuenta de ahorros),
-clave/PIN, y monto contra las denominaciones disponibles.
-
-Cada función devuelve (es_valido: bool, mensaje_error: str).
-"""
 
 from src.utils.constantes import (
     DENOMINACIONES,

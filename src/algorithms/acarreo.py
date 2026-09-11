@@ -42,7 +42,15 @@ def generar_matriz_acarreo(monto: int) -> dict:
         if any(v == 1 for v in fila):
             filas.append(fila)
             restante = nuevo_restante
-            nivel = (nivel + 1) % len(Matriz)  # avanzar nivel
+
+            if nivel == len(Matriz) - 1:
+                # Cuando se completa la cuenta de 100 en la 4ta posición,
+                # hay reinicio y el conteo vuelve a empezar desde la primera
+                # denominación del siguiente ciclo.
+                filas.append([0, 0, 0, 0])
+                nivel = 0
+            else:
+                nivel = (nivel + 1) % len(Matriz)
         else:
             # Reinicio: fila de ceros
             filas.append([0, 0, 0, 0])

@@ -36,10 +36,7 @@ def recargar_caja() -> dict:
     """
     Recarga el cajero: calcula el déficit de cada denominación frente al
     inventario inicial y SUMA exactamente esa cantidad al inventario
-    actual (no lo reemplaza).
-
-    Devuelve el detalle de billetes agregados por denominación, por
-    ejemplo {100000: 12, 50000: 5, 20000: 0, 10000: 0}
+    actual.
     """
     inventario_actual = cargar_caja()
     deficit = calcular_deficit(inventario_actual)
@@ -53,18 +50,7 @@ def recargar_caja() -> dict:
 
 
 def descontar_o_recargar(billetes_requeridos: dict) -> dict | None:
-    """
-    Intenta descontar `billetes_requeridos` del inventario actual.
-    Si NO hay suficientes billetes de alguna denominación, recarga el
-    cajero y vuelve a intentar.
-
-    Devuelve el detalle de billetes agregados en la recarga si
-    hubo que recargar, o None si el inventario ya alcanzaba.
-
-    Lanza ValueError si ni siquiera un inventario recién recargado
-    alcanza para el retiro solicitado (monto mayor a la capacidad total
-    del cajero).
-    """
+    
     caja = cargar_caja()
     detalle_recarga = None
 
@@ -91,11 +77,22 @@ def maximo_retiro_posible() -> int:
 
 
 def retiros_posibles(monto_retiro: int) -> int:
-    """
-    Predicción: con el efectivo que le queda AL CAJERO (no a la cuenta,
-    porque las cuentas no tienen saldo propio), ¿cuántos retiros de este
-    mismo monto podría seguir entregando?
-    """
+    
     if monto_retiro <= 0:
         return 0
     return maximo_retiro_posible() // monto_retiro
+
+
+def necesita_reabastecimiento(threshold: float = 0.2) -> bool:
+    """Devuelve True si la caja está por debajo del umbral del inventario inicial."""
+    inventario = cargar_caja()
+    total_actual = valor_total_caja(inventario)
+    total_inicial = valor_total_caja(INVENTARIO_INICIAL)
+    return total_actual < (threshold * total_inicial)
+
+
+def recargar_si_hace_falta(threshold: float = 0.2) -> dict | None:
+    """Recarga la caja automáticamente solo si está muy por debajo del mínimo."""
+    if not necesita_reabastecimiento(threshold):
+        return None
+    return recargar_caja()
